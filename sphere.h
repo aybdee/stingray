@@ -10,5 +10,5 @@ typedef struct Sphere
     float radius;
 } Sphere;
 
-bool sphere_hit(Sphere sphere, Ray r, float t_min, float t_max, HitRecord rec);
+bool sphere_hit(Sphere sphere, Ray r, float t_min, float t_max, HitRecord *rec);
 #endif

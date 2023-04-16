@@ -1,39 +1,40 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdbool.h>
+#include <float.h>
 #include "vec3.h"
 #include "ray.h"
+#include "hittable.h"
+#include "hittable_list.h"
+#include "sphere.h"
 
-float hit_sphere(Vec3 center, float radius, Ray r)
-{
-    Vec3 oc = vec_3_add(r.origin, vec_3_neg(center));
-    float a = vec_3_dot(r.direction, r.direction);
-    float b = 2.0 * vec_3_dot(oc, r.direction);
-    float c = vec_3_dot(oc, oc) - (radius * radius);
-    float discriminant = (b * b) - 4 * a * c;
-    if (discriminant < 0)
-    {
-        return -1.0;
-    }
-    else
-    {
-        return (b - sqrt(discriminant)) / (2.0 * a);
-    }
-}
+// float hit_sphere(Vec3 center, float radius, Ray r)
+// {
+//     Vec3 oc = vec_3_add(r.origin, vec_3_neg(center));
+//     float a = vec_3_dot(r.direction, r.direction);
+//     float b = 2.0 * vec_3_dot(oc, r.direction);
+//     float c = vec_3_dot(oc, oc) - (radius * radius);
+//     float discriminant = (b * b) - 4 * a * c;
+//     if (discriminant < 0)
+//     {
+//         return -1.0;
+//     }
+//     else
+//     {
+//         return (b - sqrt(discriminant)) / (2.0 * a);
+//     }
+// }
 
 // decide the color of a ray
-// Vec3 color(Ray r)
-// {
-//     float t = hit_sphere(vec_3(0, 0, -1), 0.5, r);
-//     if (t > 0.0)
-//     {
-//         Vec3 N = vec_3_unit(vec_3_add(ray_point_at_parameter(r, t), vec_3_neg(vec_3(0.0, 0.0, -1.0))));
-//         return vec_3_mult_s(vec_3(vec_3_x(N) + 1.0, vec_3_y(N) + 1.0, vec_3_z(N) + 1.0), 0.5);
-//     }
-//     Vec3 unit_direction = vec_3_unit(r.direction);
-//     t = 0.5 * (vec_3_y(unit_direction) + 2.0);
-//     return vec_3_add(vec_3_mult_s(vec_3(1.0, 1.0, 1.0), (1.0 - t)), vec_3_mult_s(vec_3(0.5, 0.7, 1.0), t));
-// }
+Vec3 color(Ray r, Object world)
+{
+    HitRecord rec;
+    HitRecord *rec_p = &rec;
+    if (object_hit(world, r, 0.0, FLT_MAX, rec_p))
+    {
+        return vec_3_mult_s(vec_3(vec_3_x(rec.normal), vec_3_y(rec.normal), vec_3_z(rec.normal)), 0.5);
+    }
+}
 
 int main()
 {
