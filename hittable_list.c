@@ -22,13 +22,27 @@ bool pool_hits(HittableList list, Ray r, float t_min, float t_max, HitRecord *re
     return hit_anything;
 };
 
-bool hit(Object object, Ray r, float t_min, float t_max, HitRecord *rec)
+bool object_hit(Object object, Ray r, float t_min, float t_max, HitRecord *rec)
 {
     switch (object.type)
     {
     case sphere:
-        Object *obj = &object.type;
-        Sphere *sph = (Sphere *)obj;
-        return sphere_hit(*sph, r, t_min, t_max, *rec);
+        Sphere sph = object.data.s;
+        return sphere_hit(sph, r, t_min, t_max, *rec);
     }
 }
+
+// HittableList hittable_list_append(HittableList list, Object *object)
+// {
+//     list.size += 1;
+//     Object object_list[list.size];
+//     for (int i = 0; i < list.size - 1; i++)
+//     {
+//         object_list[i] = list.objects[i];
+//     }
+//     object_list[list.size - 1] = object;
+
+//     HittableList new_list = {
+//         .size = list.size,
+//         .objects = object_list};
+// }

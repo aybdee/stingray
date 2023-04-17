@@ -1,6 +1,5 @@
 #ifndef HITABLE_H
 #define HITABLE_H
-
 #include "ray.h"
 #include "vec3.h"
 #include "sphere.h"

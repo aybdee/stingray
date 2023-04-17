@@ -26,13 +26,19 @@
 // }
 
 // decide the color of a ray
-Vec3 color(Ray r, Object world)
+Vec3 color(Ray r, HittableList world)
 {
     HitRecord rec;
     HitRecord *rec_p = &rec;
-    if (object_hit(world, r, 0.0, FLT_MAX, rec_p))
+    if (pool_hits(world, r, 0.0, FLT_MAX, rec_p))
     {
         return vec_3_mult_s(vec_3(vec_3_x(rec.normal), vec_3_y(rec.normal), vec_3_z(rec.normal)), 0.5);
+    }
+    else
+    {
+        Vec3 unit_direction = vec_3_unit(r.direction);
+        float t = 0.5 * (vec_3_y(unit_direction) + 1.0);
+        return vec_3_add(vec_3_mult_s(vec_3(1.0, 1.0, 1.0), (1.0 - t)), vec_3_mult_s(vec_3(0.5, 0.7, 1.0), t));
     }
 }
 
@@ -52,6 +58,11 @@ int main()
     Vec3 horizontal = vec_3(4.0, 0.0, 0.0);
     Vec3 vertical = vec_3(0.0, 2.0, 0.0);
     Vec3 origin = vec_3(0.0, 0.0, 0.0);
+    HittableList world = {
+        .size = 2,
+        .objects = {
+            sphere_object(sphere_new(vec_3(0.0, 0.0, -1.0), 0.5)),
+            sphere_object(sphere_new(vec_3(0.0, -100.5, -1.0), 100.0))}};
 
     for (int y = cols - 1; y >= 0; y--)
     {
@@ -61,8 +72,8 @@ int main()
             float v = (float)(y) / (float)(cols);
             Vec3 direction = vec_3_add(lower_left_corner, vec_3_add(vec_3_mult_s(horizontal, u), vec_3_mult_s(vertical, v)));
             Ray r = ray(origin, direction);
-            Vec3 col = color(r);
-            // vec_3_disp(col);
+            Vec3 p = ray_point_at_parameter(r, 2.0);
+            Vec3 col = color(r, world);
             int ir = (int)(255.9 * col.vec[0]);
             int ig = (int)(255.9 * col.vec[1]);
             int ib = (int)(255.9 * col.vec[2]);

@@ -1,14 +1,14 @@
 #ifndef HITTABLE_LIST_H
 #define HITTABLE_LIST_H
-
-#include "hittable.h"
 #include <stdbool.h>
+#include "hittable.h"
 
 typedef struct HittableList
 {
     int size;
-    Object objects[];
+    Object objects[100];
 } HittableList;
 
 bool object_hit(Object object, Ray r, float t_min, float t_max, HitRecord *rec);
+bool pool_hits(HittableList list, Ray r, float t_min, float t_max, HitRecord *rec);
 #endif

@@ -1,9 +1,10 @@
 #include "sphere.h"
 #include "ray.h"
 #include "hittable.h"
+#include "hittable_list.h"
 #include "vec3.h"
 #include "stdbool.h"
-Sphere sphere(Vec3 cen, float r)
+Sphere sphere_new(Vec3 cen, float r)
 {
     Sphere new_sphere = {
         .center = cen,
@@ -39,4 +40,13 @@ bool sphere_hit(Sphere sphere, Ray r, float t_min, float t_max, HitRecord *rec)
         }
     }
     return false;
+}
+
+Object sphere_object(Sphere sp)
+{
+    Object object = {
+        .type = sphere,
+        .data.s = sp};
+
+    return object;
 }
