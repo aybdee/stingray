@@ -5,15 +5,14 @@
 #include "vec3.h"
 #include "ray.h"
 #include "hittable.h"
-#include "hittable_list.h"
 #include "sphere.h"
 
-float hit_sphere(Vec3 center, float radius, Ray r)
+float hit_sphere(Sphere sph, Ray r)
 {
-    Vec3 oc = vec_3_add(r.origin, vec_3_neg(center));
+    Vec3 oc = vec_3_add(r.origin, vec_3_neg(sph.center));
     float a = vec_3_dot(r.direction, r.direction);
     float b = vec_3_dot(oc, r.direction);
-    float c = vec_3_dot(oc, oc) - (radius * radius);
+    float c = vec_3_dot(oc, oc) - (sph.radius * sph.radius);
     float discriminant = (b * b) - (a * c);
     if (discriminant < 0)
     {
@@ -21,46 +20,54 @@ float hit_sphere(Vec3 center, float radius, Ray r)
     }
     else
     {
-        return (-b - sqrt(discriminant)) / (a);
+        return (b - sqrt(discriminant)) / (a);
     }
 }
 
-Vec3 colorz(Ray r)
+Vec3 color(Ray r, Object objects[], int num_objects)
 {
-    float t = hit_sphere(vec_3(0.0, 0.0, -1.0), 0.5, r);
-    if (t != -11.0)
+    for (int i = 0; i < num_objects; i++)
     {
-        printf("%f", t);
-        Vec3 N = vec_3_add(ray_point_at_parameter(r, t), vec_3_neg(vec_3(0.0, 0.0, -1.0)));
-        // vec_3_disp(N);
-        return vec_3_mult_s(vec_3_add_s(N, 1.0), 0.5);
-    }
-    else
-    {
+        switch (objects[i].type)
+        {
+        case (sphere):
+        {
+            Sphere sph = objects[i].data.s;
+            Vec3 oc = vec_3_add(r.origin, vec_3_neg(sph.center));
+            float a = vec_3_dot(r.direction, r.direction);
+            float b = vec_3_dot(oc, r.direction);
+            float c = vec_3_dot(oc, oc) - (sph.radius * sph.radius);
+            float discriminant = (b * b) - (a * c);
+            if (discriminant > 0.0 && discriminant < FLT_MAX)
+            {
+                float t = (b - sqrt(discriminant)) / (a);
+                if (t > 0.0)
+                {
+                    Vec3 N = vec_3_add(ray_point_at_parameter(r, t), vec_3_neg(objects[i].data.s.center));
+                    // vec_3_disp(N);
+                    return vec_3_mult_s(vec_3_add_s(N, 1.0), 0.5);
+                }
+                else
+                {
 
-        Vec3 unit_direction = vec_3_unit(r.direction);
-        float t = 0.5 * (vec_3_y(unit_direction) + 1.0);
-        return vec_3_add(vec_3_mult_s(vec_3(1.0, 1.0, 1.0), (1.0 - t)), vec_3_mult_s(vec_3(0.5, 0.7, 1.0), t));
+                    float t = (b + sqrt(discriminant)) / (a);
+                    if (t > 0.0 && discriminant < FLT_MAX)
+                    {
+                        Vec3 N = vec_3_add(ray_point_at_parameter(r, t), vec_3_neg(objects[i].data.s.center));
+                        // vec_3_disp(N);
+                        return vec_3_mult_s(vec_3_add_s(N, 1.0), 0.5);
+                    }
+                }
+            }
+        }
+        }
     }
+    Vec3 unit_direction = vec_3_unit(r.direction);
+    float t = 0.5 * (vec_3_y(unit_direction) + 1.0);
+    return vec_3_add(vec_3_mult_s(vec_3(1.0, 1.0, 1.0), (1.0 - t)), vec_3_mult_s(vec_3(0.5, 0.7, 1.0), t));
 }
 
 // decide the color of a ray
-Vec3 color(Ray r, HittableList world)
-{
-    HitRecord rec;
-    HitRecord *rec_p = &rec;
-    if (pool_hits(world, r, 0.0, FLT_MAX, rec_p))
-    {
-        // vec_3_disp(rec.normal);
-        return vec_3_mult_s(vec_3(vec_3_x(rec.normal), vec_3_y(rec.normal), vec_3_z(rec.normal)), 0.5);
-    }
-    else
-    {
-        Vec3 unit_direction = vec_3_unit(r.direction);
-        float t = 0.5 * (vec_3_y(unit_direction) + 1.0);
-        return vec_3_add(vec_3_mult_s(vec_3(1.0, 1.0, 1.0), (1.0 - t)), vec_3_mult_s(vec_3(0.5, 0.7, 1.0), t));
-    }
-}
 
 int main()
 {
@@ -78,12 +85,11 @@ int main()
     Vec3 horizontal = vec_3(4.0, 0.0, 0.0);
     Vec3 vertical = vec_3(0.0, 2.0, 0.0);
     Vec3 origin = vec_3(0.0, 0.0, 0.0);
-    HittableList world = {
-        .size = 2,
-        .objects = {
-            // sphere_object(sphere_new(vec_3(0.0, -100.5, -1.0), 100.0)),
-            sphere_object(sphere_new(vec_3(0.0, 0.0, -1.0), 0.5)),
-        }};
+    Object objects[2] = {
+        sphere_object(sphere_new(vec_3(0.0, -100.5, -1.0), 100.0))
+        // sphere_object(sphere_new(vec_3(0.0, 0.0, -1.0), 0.5))
+
+    };
 
     for (int y = cols - 1; y >= 0; y--)
     {
@@ -95,7 +101,7 @@ int main()
             Ray r = ray(origin, direction);
             Vec3 p = ray_point_at_parameter(r, 2.0);
             // Vec3 col = color(r, world);
-            Vec3 col = colorz(r);
+            Vec3 col = color(r, objects, 1);
             int ir = (int)(255.9 * col.vec[0]);
             int ig = (int)(255.9 * col.vec[1]);
             int ib = (int)(255.9 * col.vec[2]);

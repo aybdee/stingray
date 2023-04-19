@@ -27,4 +27,5 @@ Vec3 vec_3_mult(Vec3 vec, Vec3 vec2);
 Vec3 vec_3_div_s(Vec3 vec, float f);
 Vec3 vec_3_mult_s(Vec3 vec, float f);
 Vec3 vec_3_add_s(Vec3 vec, float f);
+Vec3 vec_3_abs(Vec3 vec);
 #endif

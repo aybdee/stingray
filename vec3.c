@@ -37,6 +37,10 @@ float vec_3_b(Vec3 vec)
 {
     return vec.vec[2];
 }
+Vec3 vec_3_abs(Vec3 vec)
+{
+    return vec_3(fabsf(vec.vec[0]), fabsf(vec.vec[1]), fabsf(vec.vec[2]));
+}
 
 Vec3 vec_3_neg(Vec3 vec)
 {
