@@ -6,6 +6,7 @@
 #include "ray.h"
 #include "hittable.h"
 #include "sphere.h"
+#include <stdlib.h>
 
 float hit_sphere(Sphere sph, Ray r)
 {
@@ -75,6 +76,7 @@ int main()
     // vec_3_disp(vec_3_unit(new_vec));
     int rows = 200;
     int cols = 100;
+    int ns = 100;
     FILE *ppm;
 
     ppm = fopen("canvas.ppm", "w");
@@ -85,6 +87,7 @@ int main()
     Vec3 horizontal = vec_3(4.0, 0.0, 0.0);
     Vec3 vertical = vec_3(0.0, 2.0, 0.0);
     Vec3 origin = vec_3(0.0, 0.0, 0.0);
+
     Object objects[2] = {
 
         sphere_object(sphere_new(vec_3(0.0, 0.0, -1.0), 0.5)),
@@ -96,13 +99,18 @@ int main()
     {
         for (int x = 0; x < rows; x++)
         {
-            float u = (float)(x) / (float)(rows);
-            float v = (float)(y) / (float)(cols);
-            Vec3 direction = vec_3_add(lower_left_corner, vec_3_add(vec_3_mult_s(horizontal, u), vec_3_mult_s(vertical, v)));
-            Ray r = ray(origin, direction);
-            Vec3 p = ray_point_at_parameter(r, 2.0);
-            // Vec3 col = color(r, world);
-            Vec3 col = color(r, objects, 2);
+
+            Vec3 col = vec_3(0.0, 0.0, 0.0);
+            for (int s = 0; s < ns; s++)
+            {
+                float u = (double)(x + drand48()) / (float)(rows);
+                float v = (double)(y + drand48()) / (float)(cols);
+                Vec3 direction = vec_3_add(vec_3_add(lower_left_corner, vec_3_add(vec_3_mult_s(horizontal, u), vec_3_mult_s(vertical, v))), vec_3_neg(origin));
+                Ray r = ray(origin, direction);
+                Vec3 p = ray_point_at_parameter(r, 2.0);
+                col = vec_3_add(col, color(r, objects, 2));
+            }
+            col = vec_3_div_s(col, (float)(ns));
             int ir = (int)(255.9 * col.vec[0]);
             int ig = (int)(255.9 * col.vec[1]);
             int ib = (int)(255.9 * col.vec[2]);
