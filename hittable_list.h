@@ -2,6 +2,7 @@
 #define HITTABLE_LIST_H
 #include <stdbool.h>
 #include "hittable.h"
+#include "hit_rec.h"
 
 typedef struct HittableList
 {

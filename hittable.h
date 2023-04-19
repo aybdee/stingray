@@ -3,17 +3,10 @@
 #include "ray.h"
 #include "vec3.h"
 #include "sphere.h"
-
-typedef struct HitRecord
-{
-    float t;
-    Vec3 p;
-    Vec3 normal;
-} HitRecord;
+#include "hit_rec.h"
 
 typedef enum ObjectType
 {
-    invalid_object = 0,
     sphere
 } ObjectType;
 
@@ -28,4 +21,5 @@ typedef struct Object
     ObjectData data;
 } Object;
 
+Object sphere_object(Sphere sp);
 #endif

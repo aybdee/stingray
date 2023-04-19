@@ -1,9 +1,10 @@
 #include "sphere.h"
 #include "ray.h"
 #include "hittable.h"
-#include "hittable_list.h"
 #include "vec3.h"
 #include "stdbool.h"
+#include "hit_rec.h"
+#include <stdio.h>
 Sphere sphere_new(Vec3 cen, float r)
 {
     Sphere new_sphere = {
@@ -21,32 +22,25 @@ bool sphere_hit(Sphere sphere, Ray r, float t_min, float t_max, HitRecord *rec)
     float discriminant = (b * b) - (a * c);
     if (discriminant > 0)
     {
-        float temp = (-b - sqrt(discriminant)) / (a);
+        float temp = (b - sqrt(discriminant)) / (a);
+        printf("%f", temp);
         // check if object is in range
-        if (temp < t_max && temp > t_min)
-        {
-            rec->t = temp;
-            rec->p = ray_point_at_parameter(r, rec->t);
-            rec->normal = vec_3_div_s(vec_3_add(rec->p, vec_3_neg(sphere.center)), sphere.radius);
-            return true;
-        };
-        temp = (-b + sqrt(discriminant)) / (a);
-        if (temp < t_max && temp > t_min)
-        {
-            rec->t = temp;
-            rec->p = ray_point_at_parameter(r, rec->t);
-            rec->normal = vec_3_div_s(vec_3_add(rec->p, vec_3_neg(sphere.center)), sphere.radius);
-            return true;
-        }
+        // if (temp < t_max && temp > t_min)
+        // {
+        rec->t = temp;
+        rec->p = ray_point_at_parameter(r, rec->t);
+        rec->normal = vec_3_div_s(vec_3_add(rec->p, vec_3_neg(sphere.center)), sphere.radius);
+        // vec_3_disp(rec->normal);
+        return true;
+        // };
+        // temp = (b + sqrt(discriminant)) / (a);
+        // if (temp < t_max && temp > t_min)
+        // {
+        //     rec->t = temp;
+        //     rec->p = ray_point_at_parameter(r, rec->t);
+        //     rec->normal = vec_3_div_s(vec_3_add(rec->p, vec_3_neg(sphere.center)), sphere.radius);
+        //     return true;
+        // }
     }
     return false;
-}
-
-Object sphere_object(Sphere sp)
-{
-    Object object = {
-        .type = sphere,
-        .data.s = sp};
-
-    return object;
 }

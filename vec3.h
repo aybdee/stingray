@@ -3,7 +3,6 @@
 
 #include <math.h>
 #include <stdlib.h>
-
 typedef struct vec3
 {
     float vec[3];
