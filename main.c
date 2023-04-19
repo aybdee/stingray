@@ -43,7 +43,7 @@ Vec3 color(Ray r, Object objects[], int num_objects)
                 float t = (b - sqrt(discriminant)) / (a);
                 if (t > 0.0)
                 {
-                    Vec3 N = vec_3_add(ray_point_at_parameter(r, t), vec_3_neg(objects[i].data.s.center));
+                    Vec3 N = vec_3_unit(vec_3_add(ray_point_at_parameter(r, t), vec_3_neg(objects[i].data.s.center)));
                     // vec_3_disp(N);
                     return vec_3_mult_s(vec_3_add_s(N, 1.0), 0.5);
                 }
@@ -53,7 +53,7 @@ Vec3 color(Ray r, Object objects[], int num_objects)
                     float t = (b + sqrt(discriminant)) / (a);
                     if (t > 0.0 && discriminant < FLT_MAX)
                     {
-                        Vec3 N = vec_3_add(ray_point_at_parameter(r, t), vec_3_neg(objects[i].data.s.center));
+                        Vec3 N = vec_3_unit((vec_3_add(ray_point_at_parameter(r, t), vec_3_neg(objects[i].data.s.center))));
                         // vec_3_disp(N);
                         return vec_3_mult_s(vec_3_add_s(N, 1.0), 0.5);
                     }
@@ -86,8 +86,9 @@ int main()
     Vec3 vertical = vec_3(0.0, 2.0, 0.0);
     Vec3 origin = vec_3(0.0, 0.0, 0.0);
     Object objects[2] = {
+
+        sphere_object(sphere_new(vec_3(0.0, 0.0, -1.0), 0.5)),
         sphere_object(sphere_new(vec_3(0.0, -100.5, -1.0), 100.0))
-        // sphere_object(sphere_new(vec_3(0.0, 0.0, -1.0), 0.5))
 
     };
 
@@ -101,7 +102,7 @@ int main()
             Ray r = ray(origin, direction);
             Vec3 p = ray_point_at_parameter(r, 2.0);
             // Vec3 col = color(r, world);
-            Vec3 col = color(r, objects, 1);
+            Vec3 col = color(r, objects, 2);
             int ir = (int)(255.9 * col.vec[0]);
             int ig = (int)(255.9 * col.vec[1]);
             int ib = (int)(255.9 * col.vec[2]);
