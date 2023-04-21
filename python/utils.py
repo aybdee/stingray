@@ -1,5 +1,5 @@
 import numpy as np
-from random import rand
+from random import random
 
 
 def unit_vector(a: np.ndarray):

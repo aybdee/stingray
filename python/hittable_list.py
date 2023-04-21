@@ -9,7 +9,7 @@ class HittableList(Hittable):
         self.objects = objects
 
     def hit(self, r: Ray, t_min: float, t_max: float, rec: HitRecord):
-        temp_rec = HitRecord(0.0, np.ndarray([]), np.ndarray([]))
+        temp_rec = HitRecord(0.0, np.ndarray([]), np.ndarray([]), None)
         hit_anything = False
         closest_so_far = t_max
         for object in self.objects:
@@ -19,4 +19,5 @@ class HittableList(Hittable):
                 rec.t = temp_rec.t
                 rec.p = temp_rec.p
                 rec.normal = temp_rec.normal
+                rec.material = temp_rec.material
         return hit_anything
