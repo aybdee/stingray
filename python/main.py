@@ -1,3 +1,4 @@
+import time
 import sys
 from camera import Camera
 import numpy as np
@@ -35,9 +36,10 @@ def color(r: Ray, world: Hittable, depth: int):
 
 
 def render():
+    start = time.time()
     rows = 200
     cols = 100
-    ns = 100
+    ns = 1
     write_to_ppm(f"P3\n{rows} {cols}\n255\n", "canvas.ppm", "w")
     cam = Camera()
     world = HittableList([Sphere(np.array([0.0, 0.0, -1.0]), 0.5,
@@ -45,13 +47,15 @@ def render():
                           Sphere(np.array([0.0, -100.5, -1.0]), 100,
                                  Lambertian(np.array([0.8, 0.8, 0.0]))),
                           Sphere(np.array([1.0, 0.0, -1.0]), 0.5,
-                                 Metal(np.array([0.8, 0.6, 0.2]))),
+                                 Metal(np.array([0.8, 0.6, 0.2]), 0.5)),
 
                           Sphere(np.array([-1.0, 0.0, -1.0]), 0.5,
-                                 Metal(np.array([0.8, 0.8, 0.8])))
+                                 Metal(np.array([0.8, 0.8, 0.8]), 0.5))
                           ])
+    print(f"rendering with {ns} samples")
     for y in range(cols, 0, -1):
         for x in range(rows):
+            print(f"{((x*y)//(rows * cols)) * 100}% rendered")
             col = np.array([0.0, 0.0, 0.0])
             for i in range(ns):
                 u = float(x) / float(rows)
@@ -65,6 +69,8 @@ def render():
             ig = int(255.99 * col[1])
             ib = int(255.99 * col[2])
             write_to_ppm(f"{ir} {ig} {ib}\n", "canvas.ppm", 'a')
+    end = time.time()
+    print(f"rendered image in {start - end} seconds")
 
 
 render()

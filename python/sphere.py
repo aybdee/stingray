@@ -31,5 +31,6 @@ class Sphere(Hittable):
                 rec.t = temp
                 rec.p = r.point_at_parameter(rec.t)
                 rec.normal = (rec.p - self.centre) / self.radius
+                rec.material = self.material
                 return True
         return False
