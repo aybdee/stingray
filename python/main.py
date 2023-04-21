@@ -37,7 +37,7 @@ def color(r: Ray, world: Hittable, depth: int):
 def render():
     rows = 200
     cols = 100
-    ns = 1
+    ns = 100
     write_to_ppm(f"P3\n{rows} {cols}\n255\n", "canvas.ppm", "w")
     cam = Camera()
     world = HittableList([Sphere(np.array([0.0, 0.0, -1.0]), 0.5,
