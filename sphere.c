@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "sphere.h"
 #include "ray.h"
 #include "hittable.h"
@@ -43,4 +44,14 @@ bool sphere_hit(Sphere sphere, Ray r, float t_min, float t_max, HitRecord *rec)
         // }
     }
     return false;
+}
+
+Vec3 random_in_unit_sphere()
+{
+    Vec3 p;
+    do
+    {
+        p = vec_3_mult_s(vec_3_add(vec_3(drand48(), drand48(), drand48()), vec_3_neg(vec_3(1.0, 1.0, 1.0))), 2.0);
+    } while (vec_3_length_squared(p) >= 1.0);
+    return p;
 }

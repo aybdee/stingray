@@ -13,5 +13,5 @@ typedef struct Sphere
 
 Sphere sphere_new(Vec3 cen, float r);
 bool sphere_hit(Sphere sphere, Ray r, float t_min, float t_max, HitRecord *rec);
-
+Vec3 random_in_unit_sphere();
 #endif
