@@ -17,7 +17,7 @@ Ray Tracer implemented in C and python (seperately just because) following Peter
 <img src = "https://github.com/abundance-io/stingray/blob/main/Images/material_class_4_spheres.png?raw=true">
 
 - Added Defocus Blur On the Camera
-![image](https://user-images.githubusercontent.com/76886969/234548312-25658105-fcf3-4cd1-83b7-134a98a1224b.png)
+<img src=" https://user-images.githubusercontent.com/76886969/234548312-25658105-fcf3-4cd1-83b7-134a98a1224b.png">
 
 - Cover photo of the book (took hours to render 🥲)
 <img src = "https://github.com/abundance-io/stingray/blob/main/Images/last_scene_4.png?raw=true">
