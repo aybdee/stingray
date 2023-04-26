@@ -8,3 +8,5 @@ Ray Tracer implemented in C and python (seperately just because) following Peter
 - Switch up PPM rendering for SDL - i'll probably just end up doing this in pygame or something (using sdl directly is a pain)
 
 ### Images Generated 
+
+<img src = "https://github.com/abundance-io/stingray/blob/main/Images/diffuse_with_gamma.png?raw=true">
